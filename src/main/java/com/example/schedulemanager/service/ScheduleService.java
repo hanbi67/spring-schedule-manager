@@ -1,8 +1,6 @@
 package com.example.schedulemanager.service;
 
-import com.example.schedulemanager.dto.CreateScheduleRequest;
-import com.example.schedulemanager.dto.CreateScheduleResponse;
-import com.example.schedulemanager.dto.GetScheduleResponse;
+import com.example.schedulemanager.dto.*;
 import com.example.schedulemanager.entity.Schedule;
 import com.example.schedulemanager.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -89,4 +87,33 @@ public class ScheduleService {
 
     }
 
+    //일정 수정
+    //비밀번호 검증 로직 추가
+    @Transactional
+    public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
+        //비밀번호가 일치하지 않을 경우
+        if (!schedule.getPassword().equals(request.getPassword())) {
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
+
+        //비밀번호가 일치할 경우 일정 수정 가능
+        schedule.update(request.getTitle(), request.getAuthorName());
+
+        //flush 시점에 @LastModifiedDate가 반영되는 케이스가 많아서,
+        //Response 만들기 전에 flush로 강제 반영
+        scheduleRepository.flush();
+
+        return new UpdateScheduleResponse(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getContents(),
+                schedule.getAuthorName(),
+                schedule.getCreatedAt(),
+                schedule.getModifiedAt()
+        );
+
+    }
 }
