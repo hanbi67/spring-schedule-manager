@@ -91,6 +91,7 @@ public class ScheduleService {
     //비밀번호 검증 로직 추가
     @Transactional
     public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request) {
+        //scheduleId 존재하는지 확인
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 일정입니다.")
         );
@@ -115,5 +116,21 @@ public class ScheduleService {
                 schedule.getModifiedAt()
         );
 
+    }
+
+    //일정 삭제
+    @Transactional
+    public void delete(Long scheduleId, DeleteScheduleRequest request) {
+        //scheduleId 존재하는지 확인
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
+        //비밀번호가 일치하지 않을 경우
+        if (!schedule.getPassword().equals(request.getPassword())) {
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
+
+        //비밀번호가 일치할 경우 일정 삭제 가능
+        scheduleRepository.deleteById(scheduleId);
     }
 }
