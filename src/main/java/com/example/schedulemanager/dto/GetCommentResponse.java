@@ -5,19 +5,17 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class GetScheduleResponse {
-    //Response에서 password 제외해 반환
-    //전체 일정 조회용 DTO
+public class GetCommentResponse {
     private final Long id;
-    private final String title;
+    private final Long scheduleId;
     private final String contents;
     private final String authorName;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public GetScheduleResponse(Long id, String title, String contents, String authorName, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public GetCommentResponse(Long id, Long scheduleId, String contents, String authorName, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
-        this.title = title;
+        this.scheduleId = scheduleId;
         this.contents = contents;
         this.authorName = authorName;
         this.createdAt = createdAt;

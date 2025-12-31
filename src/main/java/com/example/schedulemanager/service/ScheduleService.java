@@ -42,19 +42,36 @@ public class ScheduleService {
         );
     }
 
-    //선택 일정 조회(고유 식별자 ID 사용)
+    //선택 일정 조회(고유 식별자 ID 사용) + 댓글 목록 포함
     @Transactional(readOnly = true)
-    public GetScheduleResponse findOne(Long scheduleId) {
+    public GetScheduleOneResponse findOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 일정입니다.")
         );
-        return new GetScheduleResponse(
+
+        //전체 일정 조회한 것처럼 List<GetCommentResponse>dtos에 담아 응답 반환하기
+        List<Comment> comments = commentRepository.findByScheduleId(scheduleId);//scheduleId별 댓글 목록
+        List<GetCommentResponse> commentDtos = new ArrayList<>();
+
+        for (Comment comment : comments) {
+            commentDtos.add(new GetCommentResponse(
+                    comment.getId(),
+                    comment.getScheduleId(),
+                    comment.getContents(),
+                    comment.getAuthorName(),
+                    comment.getCreatedAt(),
+                    comment.getModifiedAt()
+            ));
+        }
+
+        return new GetScheduleOneResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContents(),
                 schedule.getAuthorName(),
                 schedule.getCreatedAt(),
-                schedule.getModifiedAt()
+                schedule.getModifiedAt(),
+                commentDtos
         );
     }
 
