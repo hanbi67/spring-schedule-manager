@@ -51,5 +51,14 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    //댓글 생성
+    //POST /schedules/{scheduleId}/comments
+    @PostMapping("/schedules/{scheduleId}/comments")
+    public ResponseEntity<CreateCommentResponse> createComment(
+            @PathVariable Long scheduleId,
+            @RequestBody CreateCommentRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.createComment(scheduleId, request));
+    }
+
 
 }

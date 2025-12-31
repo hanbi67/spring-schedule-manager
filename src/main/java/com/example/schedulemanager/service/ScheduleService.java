@@ -1,7 +1,9 @@
 package com.example.schedulemanager.service;
 
 import com.example.schedulemanager.dto.*;
+import com.example.schedulemanager.entity.Comment;
 import com.example.schedulemanager.entity.Schedule;
+import com.example.schedulemanager.repository.CommentRepository;
 import com.example.schedulemanager.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
 
     //일정 생성
     @Transactional
@@ -132,5 +135,44 @@ public class ScheduleService {
 
         //비밀번호가 일치할 경우 일정 삭제 가능
         scheduleRepository.deleteById(scheduleId);
+    }
+
+    //댓글 생성 (FK X, scheduleId 당 comments 10개 제한)
+    @Transactional
+    public CreateCommentResponse createComment(Long scheduleId, CreateCommentRequest request) {
+        //scheduleId 존재하는지 확인
+//        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+//                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+//        );
+        if (!scheduleRepository.existsById(scheduleId)) {
+            throw new IllegalStateException("존재하지 않는 일정입니다.");
+        }
+
+        //댓글 개수 카운트
+        int count = commentRepository.countByScheduleId(scheduleId);
+        //scheduleId 별로 comments가 몇개 존재하는지
+
+        //만약 카운트가 10개가 넘는다면
+        if(count >= 10){
+            throw new IllegalStateException("해당 일정에는 댓글을 10개까지만 생성할 수 있습니다.");
+        }
+
+        //카운트가 10개 안 넘는다면 -> 댓글 생성
+        Comment comment = new Comment(
+                scheduleId,
+                request.getContents(),
+                request.getAuthorName(),
+                request.getPassword()
+        );
+        Comment savedComment = commentRepository.save(comment);
+
+        return new CreateCommentResponse(
+                savedComment.getId(),
+                savedComment.getScheduleId(),
+                savedComment.getContents(),
+                savedComment.getAuthorName(),
+                savedComment.getCreatedAt(),
+                savedComment.getModifiedAt()
+        );
     }
 }
