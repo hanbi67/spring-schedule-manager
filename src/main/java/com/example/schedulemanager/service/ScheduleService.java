@@ -3,6 +3,9 @@ package com.example.schedulemanager.service;
 import com.example.schedulemanager.dto.*;
 import com.example.schedulemanager.entity.Comment;
 import com.example.schedulemanager.entity.Schedule;
+import com.example.schedulemanager.exception.ConflictException;
+import com.example.schedulemanager.exception.ForbiddenException;
+import com.example.schedulemanager.exception.ResourceNotFoundException;
 import com.example.schedulemanager.repository.CommentRepository;
 import com.example.schedulemanager.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +49,7 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public GetScheduleOneResponse findOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+                () -> new ResourceNotFoundException("존재하지 않는 일정입니다.")
         );
 
         //전체 일정 조회한 것처럼 List<GetCommentResponse>dtos에 담아 응답 반환하기
@@ -113,11 +116,11 @@ public class ScheduleService {
     public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request) {
         //scheduleId 존재하는지 확인
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+                () -> new ResourceNotFoundException("존재하지 않는 일정입니다.")
         );
         //비밀번호가 일치하지 않을 경우
         if (!schedule.getPassword().equals(request.getPassword())) {
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new ForbiddenException("비밀번호가 일치하지 않습니다.");
         }
 
         //비밀번호가 일치할 경우 일정 수정 가능
@@ -143,11 +146,11 @@ public class ScheduleService {
     public void delete(Long scheduleId, DeleteScheduleRequest request) {
         //scheduleId 존재하는지 확인
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+                () -> new ResourceNotFoundException("존재하지 않는 일정입니다.")
         );
         //비밀번호가 일치하지 않을 경우
         if (!schedule.getPassword().equals(request.getPassword())) {
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new ForbiddenException("비밀번호가 일치하지 않습니다.");
         }
 
         //비밀번호가 일치할 경우 일정 삭제 가능
@@ -162,7 +165,7 @@ public class ScheduleService {
 //                () -> new IllegalStateException("존재하지 않는 일정입니다.")
 //        );
         if (!scheduleRepository.existsById(scheduleId)) {
-            throw new IllegalStateException("존재하지 않는 일정입니다.");
+            throw new ResourceNotFoundException("존재하지 않는 일정입니다.");
         }
 
         //댓글 개수 카운트
@@ -171,7 +174,7 @@ public class ScheduleService {
 
         //만약 카운트가 10개가 넘는다면
         if(count >= 10){
-            throw new IllegalStateException("해당 일정에는 댓글을 10개까지만 생성할 수 있습니다.");
+            throw new ConflictException("해당 일정에는 댓글을 10개까지만 생성할 수 있습니다.");
         }
 
         //카운트가 10개 안 넘는다면 -> 댓글 생성

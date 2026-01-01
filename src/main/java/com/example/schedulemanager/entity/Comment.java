@@ -16,8 +16,11 @@ public class Comment extends BaseEntity{
     private Long id;
     //FK 사용 X, 댓글을 생성할 일정의 id
     private Long scheduleId;
+    @Column(length = 100, nullable = false)
     private String contents;
+    @Column(nullable = false)
     private String authorName;
+    @Column(nullable = false)
     private String password;
 
     //생성자

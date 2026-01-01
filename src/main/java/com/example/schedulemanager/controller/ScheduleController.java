@@ -2,6 +2,7 @@ package com.example.schedulemanager.controller;
 
 import com.example.schedulemanager.dto.*;
 import com.example.schedulemanager.service.ScheduleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class ScheduleController {
 
     //POST /schedules
     @PostMapping("/schedules")
-    public ResponseEntity<CreateScheduleResponse> createSchedule(@RequestBody CreateScheduleRequest request){
+    public ResponseEntity<CreateScheduleResponse> createSchedule(@Valid @RequestBody CreateScheduleRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(request));
     }
 
@@ -38,7 +39,7 @@ public class ScheduleController {
     @PutMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponse> updateSchedule(
             @PathVariable Long scheduleId,
-            @RequestBody UpdateScheduleRequest request){
+            @Valid @RequestBody UpdateScheduleRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request));
     }
 
@@ -46,7 +47,7 @@ public class ScheduleController {
     @DeleteMapping("/schedules/{scheduleId}")
     public ResponseEntity<Void> deleteSchedule(
             @PathVariable Long scheduleId,
-            @RequestBody DeleteScheduleRequest request){
+            @Valid @RequestBody DeleteScheduleRequest request){
         scheduleService.delete(scheduleId, request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -56,7 +57,7 @@ public class ScheduleController {
     @PostMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<CreateCommentResponse> createComment(
             @PathVariable Long scheduleId,
-            @RequestBody CreateCommentRequest request){
+            @Valid @RequestBody CreateCommentRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.createComment(scheduleId, request));
     }
 
