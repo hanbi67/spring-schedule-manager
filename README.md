@@ -1,5 +1,23 @@
 # CH 3. 일정 관리 앱 만들기
 
+## 목차 (하이퍼링크)
+[1. 프로젝트 개요](#1-프로젝트-개요)<br/>
+[2. 기술 스택](#2-기술-스택)<br/>
+[3. 수행한 단계](#3-수행한-단계)<br/>
+[4. 기능 목록](#4-기능-목록)<br/>
+[5. 프로젝트 규칙](#5-프로젝트-규칙)<br/>
+[6. 클래스 구조](#6--클래스-구조)<br/>
+[7. 실행 방법(Run)](#7-실행-방법run)<br/>
+[8. 3 Layer Architecture 기반 주요 클래스·역할 설명](#8-3-layer-architecture-기반-주요-클래스--역할-설명)<br/>
+[9. CRUD API 구현](#9-crud-api-구현)<br/>
+[10. API 명세서](#10-api-명세서-)<br/>
+[11. Postman 실행 결과](#11-postman-실행-결과)<br/>
+[12. ERD](#12-erd)<br/>
+[13. 3 Layer Architecture & Annotation 정리 ](#13-3-layer-architecture--annotation-정리)<br/>
+[14. 트러블슈팅 TIL ](#14-트러블슈팅-til)<br/>
+
+---
+
 ## 1. 프로젝트 개요
 Spring Boot 기반의 **일정 관리 API**를 구현한 프로젝트입니다.
 
@@ -10,7 +28,7 @@ Spring Boot 기반의 **일정 관리 API**를 구현한 프로젝트입니다.
 
 ---
 
-## 2. 기술 스택(Tech Stack)
+## 2. 기술 스택
 - **Language**: Java 17
 - **Framework**: Spring Boot (Spring MVC)
 - **Data**: Spring Data JPA (Hibernate)
@@ -68,7 +86,7 @@ Spring Boot 기반의 **일정 관리 API**를 구현한 프로젝트입니다.
 
 ---
 
-## 5. 프로젝트 규칙 / 정책
+## 5. 프로젝트 규칙
 - 일정 1개당 댓글 최대 **10개 제한**
 - 댓글은 FK 없이 `scheduleId`(Long)로만 연결
 - 모든 응답에서 **password는 제외**
@@ -619,33 +637,22 @@ ScheduleManager
 
 ---
 
-## 13. 3 Layer Architecture & Annotation
+## 13. 3 Layer Architecture & Annotation 정리
 
-## 3 Layer Architecture
-
-### `Controller`
-
-
-### `Service`
-
-
-### `Repository`
-
-
-## Annotation
-
-### `@RequestParam`
-
-
-### `@PathVariable`
-
-
-### `@RequestBody`
+https://velog.io/@dlql6717/TIL-3-Layer-Architecture-Spring-요청-어노테이션-정리
 
 ---
 
 ## 14. 트러블슈팅 TIL
+https://velog.io/@dlql6717/TIL-CH3-일정-관리-앱-만들기-트러블슈팅
 
+<br/>
+
+<div align="right">
+
+[목차로 돌아가기](#목차-하이퍼링크)
+
+</div>
 
 ---
 
